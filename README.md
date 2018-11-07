@@ -17,12 +17,12 @@ CloudFormation template for Elasticsearch service with Cognito authentication on
 [![Launch](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=LogManager-Cognito&templateURL=https://s3.amazonaws.com/midaisuk-public-templates/aws-cfn-elasticsearch/cognito.yaml
 )
 
-1'. Deploy cognito cloudfromation template with CLI
+or with CLI
 
 ```bash
 aws cloudformation create-stack \
-    --stack-name KibanaCognito \
-    --template-body file://cognito.yaml \
+    --stack-name LogManager-Cognito \
+    --template-url https://s3.amazonaws.com/midaisuk-public-templates/aws-cfn-elasticsearch/cognito.yaml \
     --capabilities CAPABILITY_IAM \
     --region ap-northeast-1
 ```
@@ -45,12 +45,12 @@ aws cognito-idp create-user-pool-domain \
 [![Launch](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=LogManager-ES&templateURL=https://s3.amazonaws.com/midaisuk-public-templates/aws-cfn-elasticsearch/es.yaml
 )
 
-1'. Deploy Elasticsearch service cloudfromation template with CLI
+or with CLI
 
 ```bash
 aws cloudformation create-stack \
-    --stack-name LogManager \
-    --template-url file://template/es.yaml \
+    --stack-name LogManager-ES \
+    --template-url https://s3.amazonaws.com/midaisuk-public-templates/aws-cfn-elasticsearch/es.yaml \
     --parameters \
         ParameterKey=LogBucketName,ParameterValue={BUCKET_NAME} \
         ParameterKey=ElasticsearchDomainName,ParameterValue={ES_DOMAIN_NAME} \
