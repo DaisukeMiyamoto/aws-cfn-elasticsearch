@@ -34,7 +34,7 @@ Resources:
       DomainName: !Sub "${ElasticsearchDomainName}"
       ElasticsearchVersion: "6.2"
       ElasticsearchClusterConfig: 
-        InstanceCount: "1"
+        InstanceCount: 1
         InstanceType: "m4.large.elasticsearch"
       EBSOptions: 
         EBSEnabled: true
@@ -42,7 +42,7 @@ Resources:
         VolumeSize: 10
         VolumeType: "gp2"
       SnapshotOptions: 
-        AutomatedSnapshotStartHour: "0"
+        AutomatedSnapshotStartHour: 0
       AccessPolicies: 
         Version: "2012-10-17"
         Statement: 
@@ -55,7 +55,6 @@ Resources:
   ESDeliveryStream: 
     Type: AWS::KinesisFirehose::DeliveryStream
     DependsOn:
-      - DeliveryRole
       - DeliveryPolicy
       - ElasticsearchDomain
     Properties:
@@ -63,7 +62,7 @@ Resources:
       DeliveryStreamType: "DirectPut"
       ElasticsearchDestinationConfiguration: 
         BufferingHints: 
-          IntervalInSeconds: "60"
+          IntervalInSeconds: 60
           SizeInMBs: 50
         CloudWatchLoggingOptions: 
           Enabled: true
@@ -74,14 +73,14 @@ Resources:
         IndexRotationPeriod: "NoRotation"
         TypeName: "fromFirehose"
         RetryOptions: 
-          DurationInSeconds: "60"
+          DurationInSeconds: 60
         RoleARN: !GetAtt DeliveryRole.Arn
         S3BackupMode: "AllDocuments"
         S3Configuration: 
           BucketARN: !Sub "arn:aws:s3:::${LogBucketName}"
           BufferingHints: 
-            IntervalInSeconds: "60"
-            SizeInMBs: "50"
+            IntervalInSeconds: 60
+            SizeInMBs: 50
           CompressionFormat: "UNCOMPRESSED"
           Prefix: "log/"
           RoleARN: !GetAtt DeliveryRole.Arn 
