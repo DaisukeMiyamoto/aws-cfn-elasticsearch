@@ -1,16 +1,23 @@
-# aws-cfn-elasticsearch
+aws-cfn-elasticsearch
+---
+
 CloudFormation template for Elasticsearch service with Cognito authentication on AWS
 
-## Overview
 
-```
--> Firehose -> Elasticsearch service -> Kibana <- Cognito
-            -> S3
-```
+# Architecture
 
-## Set up
+![Architecture](./img/architecture.png)
 
-### Cognito for Kibana Auth
+# Deploy
+
+## set up Cognito
+
+1. Deploy Cognito cloudfromation template with Management Console
+
+[![Launch](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=LogManager-Cognito&templateURL=https://s3.amazonaws.com/midaisuk-public-templates/aws-cfn-elasticsearch/cognito.yaml
+)
+
+1'. Deploy cognito cloudfromation template with CLI
 
 ```bash
 aws cloudformation create-stack \
@@ -18,21 +25,32 @@ aws cloudformation create-stack \
     --template-body file://cognito.yaml \
     --capabilities CAPABILITY_IAM \
     --region ap-northeast-1
+```
 
+2. add domain to cognito user pool
+
+```bash
 aws cognito-idp create-user-pool-domain \
     --user-pool-id {USER_POOL_ID} \
     --domain {IPD_USER_POOL_DOMAIN_NAME} \
     --region ap-northeast-1
 ```
 
-- add user for cognito user pool
+3. add user for cognito user pool
 
-### LogManager
+## set up Elasticsearch
+
+1. Deploy Elasticsearch service cloudfromation template with Management Console
+
+[![Launch](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=LogManager-ES&templateURL=https://s3.amazonaws.com/midaisuk-public-templates/aws-cfn-elasticsearch/es.yaml
+)
+
+1'. Deploy Elasticsearch service cloudfromation template with CLI
 
 ```bash
 aws cloudformation create-stack \
     --stack-name LogManager \
-    --template-body file://logmanager.yaml \
+    --template-url file://template/es.yaml \
     --parameters \
         ParameterKey=LogBucketName,ParameterValue={BUCKET_NAME} \
         ParameterKey=ElasticsearchDomainName,ParameterValue={ES_DOMAIN_NAME} \
@@ -40,7 +58,11 @@ aws cloudformation create-stack \
         ParameterKey=FirehoseName,ParameterValue={FIREHOSE_NAME} \
     --capabilities CAPABILITY_NAMED_IAM \
     --region ap-northeast-1
+```
 
+2. use Cognito user pools for Kibana
+
+```bash
 aws es update-elasticsearch-domain-config \
     --domain-name {ES_DOMAIN_NAME} \
     --cognito-options Enabled=true,UserPoolId="{USER_POOL_ID}",IdentityPoolId="{ID_POOL_ID}",RoleArn="{COGNITO_SERVICE_ROLE}" \
