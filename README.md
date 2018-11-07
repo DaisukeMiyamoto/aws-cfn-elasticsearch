@@ -68,3 +68,13 @@ aws es update-elasticsearch-domain-config \
     --cognito-options Enabled=true,UserPoolId="{USER_POOL_ID}",IdentityPoolId="{ID_POOL_ID}",RoleArn="{COGNITO_SERVICE_ROLE}" \
     --region ap-northeast-1
 ```
+
+# Screenshots
+
+## Cognito managed login interface
+
+![Cognito login](./img/cognito-login.png)
+
+## Kibana
+
+![Cognito login](./img/kibana.png)
